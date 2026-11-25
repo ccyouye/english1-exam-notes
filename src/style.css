@@ -778,7 +778,8 @@ strong { color: var(--ink); font-weight: 650; }
 }
 @media (max-width: 720px) {
   .view { padding: 18px 15px 70px; }
-  .topbar { gap: 8px; padding: 0 14px; }
+  .topbar { gap: 8px; padding: 0 14px; background: color-mix(in srgb, var(--bg) 96%, transparent); }
+  .reader-bar { background: color-mix(in srgb, var(--bg) 95%, transparent); }
   .crumb { display: none; }
   .topsearch { width: auto; flex: 1; }
   .topsearch input { height: 34px; }
