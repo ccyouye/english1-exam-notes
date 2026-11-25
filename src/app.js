@@ -233,7 +233,7 @@
         <div class="book-card small">
           <div class="bk">Cloze · Part B · Translation</div>
           <h2><a href="#/small/${yearsS[yearsS.length - 1]}">小三门逐题解析</a></h2>
-          <div class="desc">依据祁迹「小三门」课堂笔记方法体系：完形 20 空、新题型 5 题、翻译 5 句。每题固定“方法—线索—解析—排除”，翻译另给意群切分、采分点与参考译文。</div>
+          <div class="desc">依据祁迹「小三门」课堂笔记方法体系：完形 20 空、新题型 5 题、翻译 5 句。完形每个选项均附中文释义；每题固定“方法—线索—解析—排除”，翻译另给意群切分、采分点与参考译文。</div>
           <div class="nums"><span><b>${smallN}</b>题</span><span><b>17</b>年</span><span><b>33</b>条方法</span><span><b>3</b>种题型</span></div>
           <div class="year-grid">${yearList(yearsS, "small")}</div>
           <a class="btn sm" style="margin-top:4px" href="#/small/${yearsS[yearsS.length - 1]}">进入小三门解析 →</a>
@@ -426,7 +426,11 @@
           const opts = (it.opts || [])
             .map((text, i) => {
               const label = "ABCD"[i];
-              return `<div class="opt ${label === it.answer ? "correct" : ""}"><span class="olabel">${label}</span><span>${esc(text)}</span></div>`;
+              const zh = it.optZh && it.optZh[i] ? it.optZh[i] : "";
+              return `<div class="opt ${label === it.answer ? "correct" : ""}">
+                <span class="olabel">${label}</span>
+                <span class="opt-body"><span class="opt-en">${esc(text)}</span>${zh ? `<span class="opt-zh">${esc(zh)}</span>` : ""}</span>
+              </div>`;
             })
             .join("");
           return `
@@ -804,7 +808,7 @@
           const text =
             k === "翻译"
               ? [it.sentence, it.chunks, it.method, it.keypoints, it.translation, it.analysis].join(" ")
-              : [it.point || "", it.method, it.clue, it.analysis, it.exclude].join(" ");
+              : [it.point || "", it.method, it.clue, it.analysis, it.exclude, (it.optZh || []).join(" ")].join(" ");
           idx.push({
             book: "小三门",
             kind: k,

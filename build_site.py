@@ -455,6 +455,11 @@ def parse_small() -> dict:
     code_names = parse_small_method_codes(method_md)
     guide_html = md_to_html(method_md, "sm")
 
+    opt_zh_path = SMALL_DIR / "opt_zh.json"
+    if not opt_zh_path.exists():
+        opt_zh_path = ROOT / "src" / "opt_zh.json"
+    opt_zh = json.loads(opt_zh_path.read_text(encoding="utf-8")) if opt_zh_path.exists() else {}
+
     years = []
     code_counts: dict[str, int] = {}
     code_questions: dict[str, list[dict]] = {}
@@ -479,6 +484,8 @@ def parse_small() -> dict:
                 opt_map = parse_cloze_options(body[idx:])
                 for it in data["items"]:
                     it["opts"] = opt_map.get(it["no"], [])
+                    zh = opt_zh.get(str(y), {}).get(str(it["no"]), {})
+                    it["optZh"] = [zh.get(L, "") for L in "ABCD"]
             elif kind == "新题型":
                 body = body.split("## 答案")[0]
                 lines = body.rstrip().splitlines()
