@@ -469,6 +469,11 @@ def parse_small() -> dict:
     code_names = parse_small_method_codes(method_md)
     guide_html = md_to_html(method_md, "sm")
 
+    sent_path = SMALL_DIR / "cloze_sentences.json"
+    if not sent_path.exists():
+        sent_path = ROOT / "src" / "cloze_sentences.json"
+    cloze_sent = json.loads(sent_path.read_text(encoding="utf-8")) if sent_path.exists() else {}
+
     opt_zh_path = SMALL_DIR / "opt_zh.json"
     if not opt_zh_path.exists():
         opt_zh_path = ROOT / "src" / "opt_zh.json"
@@ -500,6 +505,9 @@ def parse_small() -> dict:
                     it["opts"] = opt_map.get(it["no"], [])
                     zh = opt_zh.get(str(y), {}).get(str(it["no"]), {})
                     it["optZh"] = [zh.get(L, "") for L in "ABCD"]
+                    sent = cloze_sent.get(str(y), {}).get(str(it["no"]), {})
+                    it["sentence"] = sent.get("sentence", "")
+                    it["sentenceZh"] = sent.get("sentenceZh", "")
             elif kind == "新题型":
                 body = body.split("## 答案")[0]
                 lines = body.rstrip().splitlines()

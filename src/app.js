@@ -58,6 +58,11 @@
     out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     return out;
   }
+  function sceneHTML(s, activeNo) {
+    return esc(s).replace(/\[(\d{1,2})\]/g, (m, n) =>
+      `<span class="scene-mark${Number(n) === activeNo ? " now" : ""}">${n}</span>`
+    );
+  }
   function readYear(y) {
     return R.years.find((x) => x.year === y);
   }
@@ -233,7 +238,7 @@
         <div class="book-card small">
           <div class="bk">Cloze · Part B · Translation</div>
           <h2><a href="#/small/${yearsS[yearsS.length - 1]}">小三门逐题解析</a></h2>
-          <div class="desc">依据祁迹「小三门」课堂笔记方法体系：完形 20 空、新题型 5 题、翻译 5 句。完形每个选项均附中文释义；每题固定“方法—线索—解析—排除”，翻译另给意群切分、采分点与参考译文。</div>
+          <div class="desc">依据祁迹「小三门」课堂笔记方法体系：完形 20 空、新题型 5 题、翻译 5 句。完形每个选项均附中文释义，每空另给出题句英中对照；每题固定“方法—线索—解析—排除”，翻译另给意群切分、采分点与参考译文。</div>
           <div class="nums"><span><b>${smallN}</b>题</span><span><b>17</b>年</span><span><b>33</b>条方法</span><span><b>3</b>种题型</span></div>
           <div class="year-grid">${yearList(yearsS, "small")}</div>
           <a class="btn sm" style="margin-top:4px" href="#/small/${yearsS[yearsS.length - 1]}">进入小三门解析 →</a>
@@ -448,6 +453,7 @@
             <div class="qbody">
               ${revealBar(key)}
               <div class="cloze-opts">${opts}</div>
+              ${it.sentence ? `<div class="scene-box"><div class="scene-label">出题句 · 英/中</div><div class="scene-en">${sceneHTML(it.sentence, it.no)}</div>${it.sentenceZh ? `<div class="scene-zh">${sceneHTML(it.sentenceZh, it.no)}</div>` : ""}</div>` : ""}
               ${field("方法", `<div class="ftext">${md(it.method)}</div>`)}
               ${field("线索", `<div class="ftext">${md(it.clue)}</div>`)}
               ${field("解析", `<div class="ftext">${md(it.analysis)}</div>`)}
@@ -813,7 +819,7 @@
           const text =
             k === "翻译"
               ? [it.sentence, it.chunks, it.method, it.keypoints, it.translation, it.analysis].join(" ")
-              : [it.point || "", it.method, it.clue, it.analysis, it.exclude, (it.optZh || []).join(" ")].join(" ");
+              : [it.point || "", it.sentence || "", it.sentenceZh || "", it.method, it.clue, it.analysis, it.exclude, (it.optZh || []).join(" ")].join(" ");
           idx.push({
             book: "小三门",
             kind: k,
