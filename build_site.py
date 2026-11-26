@@ -17,6 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 BASE = ROOT.parent
 READ_MD = BASE / "阅读/成稿/书稿源文件.md"
+READ_Q = BASE / "阅读/成稿/阅读题目与翻译.json"
 SMALL_DIR = BASE / "小三门/解析工程"
 SMALL_DATA = SMALL_DIR / "data"
 SMALL_OUT = SMALL_DIR / "out"
@@ -258,6 +259,8 @@ def method_name_of(text: str) -> str | None:
 
 def parse_reading() -> dict:
     raw = READ_MD.read_text(encoding="utf-8")
+    qpath = READ_Q if READ_Q.exists() else (ROOT / "src" / "reading_questions.json")
+    qbank = json.loads(qpath.read_text(encoding="utf-8")) if qpath.exists() else {}
     year_matches = list(re.finditer(r"(?m)^# (\d{4})年英语（一）阅读\s*$", raw))
     first_year = year_matches[0].start()
     app_start = raw.index("# 附录A")
@@ -296,10 +299,21 @@ def parse_reading() -> dict:
                 fields = {}
                 for fm in re.finditer(r"(?m)^- \*\*(.+?)\*\*：(.*)$", qb):
                     fields[fm.group(1)] = fm.group(2).strip()
+                qd = qbank.get(str(y), {}).get(str(tno), {}).get(str(no), {})
                 qs.append(
                     {
                         "no": no,
                         "answer": fields.get("答案", "").strip(),
+                        "stem": qd.get("stem", ""),
+                        "stemZh": qd.get("stemZh", ""),
+                        "options": [
+                            {
+                                "label": L,
+                                "text": (qd.get("options", {}).get(L, {}) or {}).get("text", ""),
+                                "zh": (qd.get("options", {}).get(L, {}) or {}).get("zh", ""),
+                            }
+                            for L in "ABCD"
+                        ] if qd else [],
                         "type": fields.get("题型", ""),
                         "locate": fields.get("定位", ""),
                         "methodsRaw": fields.get("可用方法", ""),

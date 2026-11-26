@@ -467,6 +467,18 @@ strong { color: var(--ink); font-weight: 650; }
 .chev { width: 26px; height: 26px; display: grid; place-items: center; color: var(--faint); transition: transform .2s; font-size: 11px; }
 .qcard.open .chev { transform: rotate(180deg); }
 .qbody { display: none; padding: 2px 20px 20px; border-top: 1px solid var(--line); }
+.stem-box {
+  margin-top: 16px;
+  padding: 12px 15px;
+  background: var(--surface-2);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 9px 9px 0;
+}
+.stem-en { font-family: var(--font-en), var(--font-serif); font-size: 15.5px; line-height: 1.75; color: var(--ink); }
+.stem-zh { font-size: 13.8px; line-height: 1.8; color: var(--muted); margin-top: 6px; }
+.reading-opts { display: grid; gap: 7px; margin-top: 10px; }
+.practice .qcard:not(.revealed) .stem-zh,
+.practice .qcard:not(.revealed) .opt-zh { display: none; }
 .qcard.open .qbody { display: block; animation: unveil .18s ease; }
 @keyframes unveil { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
 .field { margin-top: 18px; }

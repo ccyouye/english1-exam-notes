@@ -3,3 +3,7 @@ src/data.json
 *.log
 
 翻译工作/
+
+阅读题目工作/
+__pycache__/
+*.pyc

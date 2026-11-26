@@ -225,7 +225,7 @@
         <div class="book-card">
           <div class="bk">Reading · Part A</div>
           <h2><a href="#/reading/${yearsR[yearsR.length - 1]}">阅读逐题解析</a></h2>
-          <div class="desc">颉斌斌阅读方法论落地：精准定位、选项比错、主旨校验。每年四篇，先“文章速读”，再逐题给定位句、可用方法、解析与避坑。</div>
+          <div class="desc">颉斌斌阅读方法论落地：精准定位、选项比错、主旨校验。每年四篇，先“文章速读”，再逐题给题干、选项中英对照、定位句、可用方法、解析与避坑。</div>
           <div class="nums"><span><b>${readN}</b>题</span><span><b>88</b>篇</span><span><b>22</b>年</span><span><b>${R.stats.methods.length}</b>种方法</span></div>
           <div class="year-grid">${yearList(yearsR, "reading")}</div>
           <a class="btn sm" style="margin-top:4px" href="#/reading/${yearsR[yearsR.length - 1]}">进入阅读解析 →</a>
@@ -332,6 +332,8 @@
           </div>
           <div class="qbody">
             ${revealBar(key)}
+            ${q.stem ? `<div class="stem-box"><div class="stem-en">${md(q.stem)}</div>${q.stemZh ? `<div class="stem-zh">${esc(q.stemZh)}</div>` : ""}</div>` : ""}
+            ${q.options && q.options.some((o) => o.text) ? `<div class="reading-opts">${q.options.map((o) => `<div class="opt ${o.label === q.answer ? "correct" : ""}"><span class="olabel">${o.label}</span><span class="opt-body"><span class="opt-en">${esc(o.text)}</span>${o.zh ? `<span class="opt-zh">${esc(o.zh)}</span>` : ""}</span></div>`).join("")}</div>` : ""}
             ${field("定位", `<div class="ftext locate">${md(q.locate)}</div>`)}
             ${field("可用方法", methods)}
             ${field("解析", `<div class="ftext">${md(q.analysis)}</div>`)}
@@ -786,7 +788,10 @@
             type: q.type,
             route: `#/reading/${y.year}/${t.no}`,
             focus: `r-${y.year}-${q.no}`,
-            text: [q.type, q.locate, q.methodsRaw, q.analysis, q.ref, q.pitfall].join(" "),
+            text: [
+              q.stem, q.stemZh, q.type, q.locate, q.methodsRaw, q.analysis, q.ref, q.pitfall,
+              ...(q.options || []).flatMap((o) => [o.text, o.zh]),
+            ].join(" "),
           });
         });
       });
